@@ -53,7 +53,7 @@
 		</div>
 		<div class="stat text-orange-300" class:bg-green-700={currentWin?.award === AwardType.Bronze}>
 			<div class="stat-title text-orange-400">{awardLabels[AwardType.Bronze]}</div>
-			<div class="stat-value text-lg">{moment(thresholds.bronze, 'm').format('mm:ss.SS')}</div>
+			<div class="stat-value text-lg">{moment(thresholds.bronze, 'x').format('mm:ss.SS')}</div>
 		</div>
 	</div>
 </div>
