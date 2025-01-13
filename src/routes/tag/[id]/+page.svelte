@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { appStateType } from '$lib/appState.svelte';
 	import type { TagList } from '$lib/tags.svelte';
@@ -13,14 +14,16 @@
 
 	let timeTillRedirect = $state(3);
 
-	let hasSetFoundtag = false;
+	let hasSetFoundtag = $state(false);
+
+	let interval: NodeJS.Timeout;
 
 	onMount(() => {
 		if (!foundTag?.found && isNextTag) {
 			hasSetFoundtag = true;
 			foundTag?.find();
 		}
-		const interval = setInterval(() => {
+		interval = setInterval(() => {
 			timeTillRedirect--;
 			if (timeTillRedirect <= 0) {
 				clearInterval(interval);
@@ -71,6 +74,13 @@
 					</p>
 				</div>
 			{/if}
+			<button
+				class="btn btn-secondary mx-auto block"
+				onclick={() => {
+					clearInterval(interval);
+					goto('/');
+				}}>Don't Close!</button
+			>
 		</div>
 	</div>
 </div>
