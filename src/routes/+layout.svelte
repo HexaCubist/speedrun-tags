@@ -28,6 +28,11 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Grand(er) Challenge</title>
+	<meta name="description" content="A scavenger hunt for secret santa" />
+</svelte:head>
+
 <div class="bg-base-200 h-screen">
 	<div class="wrapper h-full overflow-x-hidden overflow-y-auto pb-20">
 		{@render children()}
