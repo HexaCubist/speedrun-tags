@@ -18,6 +18,7 @@
 	let zoom = $state(15);
 
 	const myAppState = getContext<appStateType>('appState');
+	const appStore = myAppState.store;
 	const userLocation = myAppState.location;
 
 	onMount(() => {
@@ -65,7 +66,11 @@
 		if (map && tags) {
 			let thisMap = map;
 			markerList.forEach((marker) => marker.remove());
-			markerList = [...tags.foundTags, ...(tags.nextTag ? [tags.nextTag] : [])].map((tag) => {
+			markerList = (
+				Object.keys($appStore.previousWins).length > 0
+					? tags.allTags
+					: [...tags.foundTags, ...(tags.nextTag ? [tags.nextTag] : [])]
+			).map((tag) => {
 				const el = document.createElement('div');
 				mount(TagMarker, { props: { userLocation, tagList: tags, tag }, target: el });
 				return new mapboxgl.Marker({

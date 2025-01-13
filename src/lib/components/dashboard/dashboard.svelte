@@ -63,11 +63,16 @@
 			<a class="stat shrink grow basis-full" href={tags.nextTag.link}>
 				<div class="stat-title text-base-100">Next Tag Hint (tap to open directions)</div>
 				<div class="stat-value text-left text-lg text-wrap">
-					{#if nextTag?.data.Hint}
-						{@html tags.nextTag.data.Hint}
-					{:else}
-						No hint... Good luck!
-					{/if}
+					<h3>{tags.nextTag.data.Name}</h3>
+				</div>
+				<div class="stat-desc text-white">
+					<div class="mb-2">
+						{#if nextTag?.data.Hint}
+							{@html tags.nextTag.data.Hint}
+						{:else}
+							No hint... Good luck!
+						{/if}
+					</div>
 					{#if nextTag?.data.hint_image}
 						<img
 							class="rounded-box w-full max-w-screen-sm"

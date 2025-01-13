@@ -70,7 +70,8 @@
 <Scoreboard appState={myAppState} {tags}></Scoreboard>
 
 <div class="m-2">
-	<button onclick={() => appState.newSession()} class="btn btn-primary btn-block block text-center"
-		>Start again</button
+	<button
+		onclick={() => myAppState.newSession()}
+		class="btn btn-primary btn-block block text-center">Start again</button
 	>
 </div>

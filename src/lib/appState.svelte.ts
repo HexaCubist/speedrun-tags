@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import { get } from 'svelte/store';
 import { GpsLocation } from './location.svelte';
 import { persisted } from 'svelte-persisted-store';
+import { goto } from '$app/navigation';
 
 export enum UIStates {
 	UnlockedDashboard,
@@ -66,6 +67,7 @@ export const appState = () => {
 				tagState: {},
 				uiState: []
 			}));
+			goto('/');
 		},
 		location: new GpsLocation()
 	};
