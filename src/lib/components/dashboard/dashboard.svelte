@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import type { appStateType } from '$lib/appState.svelte';
 	import type { TagList } from '$lib/tags.svelte';
 	import Map from '../map/map.svelte';
 
-	let { tags }: { tags: TagList } = $props();
+	let { tags, appState }: { tags: TagList; appState: appStateType } = $props();
 
 	let nextTag = $derived(tags.nextTag);
 	let percentFound = $derived(tags.foundTags.length / tags.allTags.length);
@@ -74,6 +75,7 @@
 			<button onclick={() => tags.lastTag?.unfind()} class="btn btn-primary"
 				>Unfind next tag admin</button
 			>
+			<button onclick={() => appState.newSession()} class="btn btn-primary">New Session</button>
 		{/if}
 	</div>
 </div>

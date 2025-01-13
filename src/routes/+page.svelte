@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { appState, UIStates, type appStateType } from '$lib/appState.svelte.js';
 	import Dashboard from '$lib/components/dashboard/dashboard.svelte';
+	import Win from '$lib/components/dashboard/win.svelte';
 	import { LocationState } from '$lib/location.svelte';
 	import { TagList } from '$lib/tags.svelte';
 	import { getContext } from 'svelte';
@@ -11,11 +12,11 @@
 	let firstTag = $derived(tags.allTags[0]);
 </script>
 
-<div class="hero">
-	<div class="hero-content text-justify">
-		<div class="max-w-md px-2">
-			{#if tags.nextTag === firstTag && !myAppState.value.uiState.includes(UIStates.UnlockedDashboard)}
-				<h1 class="text-5xl font-bold">Secret Santa 🎄</h1>
+{#if tags.nextTag === firstTag && !myAppState.value.uiState.includes(UIStates.UnlockedDashboard)}
+	<div class="hero">
+		<div class="hero-content text-justify">
+			<div class="max-w-md px-2">
+				<h1 class="text-valance text-4xl font-bold">Secret Santa 🎄</h1>
 				<div>
 					<p class="mb-2">
 						Hey Mike! For your secret santa this year, I've put together a bit of a challenge. It's
@@ -67,8 +68,10 @@
 							{#if myAppState.location.state === LocationState.complete}
 								<button
 									class="btn btn-sm btn-primary"
-									onclick={() => myAppState.value.uiState.push(UIStates.UnlockedDashboard)}
-									>Get Started</button
+									onclick={() => {
+										myAppState.value.uiState = [UIStates.UnlockedDashboard];
+										myAppState.value.sessionID = date.now();
+									}}>Get Started</button
 								>
 							{:else if myAppState.location.state === LocationState.accepted || myAppState.location.state === LocationState.requested}
 								<button class="btn btn-sm btn-secondary" disabled
@@ -78,11 +81,15 @@
 						</div>
 					</li>
 					<li class="step">Tag your phone against the NFC card</li>
+					<li class="step" data-content="♾️">Repeat until you've found all the tags!</li>
 				</ul>
+				<p>Depending on how quickly you can complete this, there may be a prize at the end...</p>
 				<br />
-			{:else}
-				<Dashboard {tags} />
-			{/if}
+			</div>
 		</div>
 	</div>
-</div>
+{:else if myAppState.value.uiState.includes(UIStates.Finished)}
+	<Win {tags} appState={myAppState} />
+{:else}
+	<Dashboard {tags} appState={myAppState} />
+{/if}

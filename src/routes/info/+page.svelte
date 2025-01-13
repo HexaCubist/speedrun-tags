@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import type { appStateType } from '$lib/appState.svelte';
+	import Scoreboard from '$lib/components/dashboard/scoreboard.svelte';
 	import { timer, type TagList } from '$lib/tags.svelte';
 	import moment from 'moment';
 	import { getContext, onMount } from 'svelte';
@@ -11,6 +12,7 @@
 </script>
 
 <div class="bg-base-100 rounded-box m-2 overflow-clip overflow-x-auto shadow">
+	<h2 class="m-4 mb-0 text-xl font-bold">Tags Found</h2>
 	<table class="table">
 		<!-- head -->
 		<thead>
@@ -63,4 +65,12 @@
 			{/each}
 		</tbody>
 	</table>
+</div>
+
+<Scoreboard appState={myAppState} {tags}></Scoreboard>
+
+<div class="m-2">
+	<button onclick={() => appState.newSession()} class="btn btn-primary btn-block block text-center"
+		>Start again</button
+	>
 </div>

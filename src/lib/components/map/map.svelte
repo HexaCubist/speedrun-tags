@@ -69,7 +69,8 @@
 				const el = document.createElement('div');
 				mount(TagMarker, { props: { userLocation, tagList: tags, tag }, target: el });
 				return new mapboxgl.Marker({
-					element: el
+					element: el,
+					anchor: 'center'
 				})
 					.setLngLat([tag.lon, tag.lat])
 					.addTo(thisMap);

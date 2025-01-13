@@ -65,8 +65,8 @@ export class Tag {
 	});
 	public distance = $derived.by(() => {
 		if (!this.appState.location.lat || !this.appState.location.lon) return Infinity;
-		const from = point([this.appState.location.lat, this.appState.location.lon]);
-		const to = point([this.lat, this.lon]);
+		const from = point([this.appState.location.lon, this.appState.location.lat]);
+		const to = point([this.lon, this.lat]);
 		console.log(from, to, distance(from, to, { units: 'meters' }));
 		return Math.round(distance(from, to, { units: 'meters' }));
 	});

@@ -22,9 +22,19 @@
 	$effect(() => {
 		if (tags.foundTags.length > lastNumFound) {
 			jsConfetti?.addConfetti();
-			console.log('Confetti!');
+			console.log('Confetti!', tags.foundTags.length, data.tags.length);
+			if (tags.foundTags.length === data.tags.length) {
+				console.log('Finished!');
+				myAppState.value.previousWins[myAppState.value.sessionID] = JSON.parse(
+					JSON.stringify(myAppState.value.tagState)
+				);
+			}
 		}
 		lastNumFound = tags.foundTags.length;
+		if (tags.foundTags.length === data.tags.length) {
+			if (!myAppState.value.uiState.includes(UIStates.Finished))
+				myAppState.value.uiState.push(UIStates.Finished);
+		}
 	});
 </script>
 
