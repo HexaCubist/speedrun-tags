@@ -14,7 +14,7 @@ export const getTags = async () => {
 		(
 			(await client.request(
 				readItems('NFC_Tags', {
-					fields: ['id', 'status', 'sort', 'Name', 'Hint', 'hint_image', 'location'],
+					fields: ['id', 'status', 'sort', 'Name', 'Hint', 'hint_image.*', 'location'],
 					sort: 'sort',
 					filter: {
 						status: {

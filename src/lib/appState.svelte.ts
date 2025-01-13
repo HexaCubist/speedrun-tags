@@ -1,5 +1,7 @@
 import { browser } from '$app/environment';
+import { get } from 'svelte/store';
 import { GpsLocation } from './location.svelte';
+import { persisted } from 'svelte-persisted-store';
 
 export enum UIStates {
 	UnlockedDashboard,
@@ -22,6 +24,14 @@ export class LocalStore<T> {
 		$effect(() => {
 			localStorage.setItem(this.key, this.serialize(this.value));
 		});
+
+		if (browser)
+			window.setInterval(() => {
+				const newData = localStorage.getItem(this.key);
+				if (newData && newData !== this.serialize(this.value)) {
+					this.value = this.deserialize(newData);
+				}
+			}, 500);
 	}
 
 	serialize(value: T): string {
@@ -38,28 +48,28 @@ export function localStore<T>(key: string, value: T) {
 }
 
 export const appState = () => {
-	const store = localStore('appState', {
+	const store = persisted('appState-persisted', {
 		tagState: {} as Record<string, number | false>,
 		uiState: [] as UIStates[],
 		sessionID: Date.now().toString(),
 		previousWins: {} as Record<string, Record<string, number>>
 	});
-	const res = store as typeof store & {
-		location: GpsLocation;
-		newSession: () => void;
+	let restartingSession = false;
+	const res = {
+		store,
+		newSession() {
+			if (!confirm('Are you sure you want to start a new session?')) return;
+			restartingSession = true;
+			store.update((v) => ({
+				...v,
+				sessionID: Date.now().toString(),
+				tagState: {},
+				uiState: []
+			}));
+		},
+		location: new GpsLocation()
 	};
-	res.location = new GpsLocation();
-	res.newSession = () => {
-		if (!confirm('Are you sure you want to start a new session?')) return;
-		res.value.sessionID = Date.now().toString();
-		res.value.tagState = {};
-		res.value.uiState = [];
-		window.setTimeout(() => {
-			window.location.reload();
-		}, 300);
-	};
-	if (!res.value.sessionID) res.newSession();
-	if (!res.value.previousWins) res.value.previousWins = {};
+	if (!get(store).sessionID && !restartingSession) res.newSession();
 
 	return res;
 };

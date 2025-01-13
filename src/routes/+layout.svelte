@@ -7,12 +7,15 @@
 	import { onMount, setContext } from 'svelte';
 	import { LocationState } from '$lib/location.svelte';
 	import JSConfetti from 'js-confetti';
+	import { get } from 'svelte/store';
 
 	let { children, data } = $props();
 	let myAppState = appState();
 	setContext('appState', myAppState);
 	let tags = TagList.fromData(data.tags, myAppState);
 	setContext('tags', tags);
+
+	let appStore = myAppState.store;
 
 	let jsConfetti: JSConfetti | undefined;
 	onMount(() => {
@@ -25,15 +28,19 @@
 			console.log('Confetti!', tags.foundTags.length, data.tags.length);
 			if (tags.foundTags.length === data.tags.length) {
 				console.log('Finished!');
-				myAppState.value.previousWins[myAppState.value.sessionID] = JSON.parse(
-					JSON.stringify(myAppState.value.tagState)
-				);
+				myAppState.store.update((state) => {
+					state.previousWins[state.sessionID] = JSON.parse(JSON.stringify(state.tagState));
+					return state;
+				});
 			}
 		}
 		lastNumFound = tags.foundTags.length;
 		if (tags.foundTags.length === data.tags.length) {
-			if (!myAppState.value.uiState.includes(UIStates.Finished))
-				myAppState.value.uiState.push(UIStates.Finished);
+			if (!$appStore.uiState.includes(UIStates.Finished))
+				myAppState.store.update((s) => {
+					s.uiState.push(UIStates.Finished);
+					return s;
+				});
 		}
 	});
 </script>

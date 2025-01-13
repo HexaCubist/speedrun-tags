@@ -5,14 +5,17 @@
 	import { LocationState } from '$lib/location.svelte';
 	import { TagList } from '$lib/tags.svelte';
 	import { getContext } from 'svelte';
+	import { get } from 'svelte/store';
 	let { data } = $props();
 
 	let myAppState = getContext<appStateType>('appState');
 	let tags = getContext<TagList>('tags');
 	let firstTag = $derived(tags.allTags[0]);
+
+	let appStateStore = myAppState.store;
 </script>
 
-{#if tags.nextTag === firstTag && !myAppState.value.uiState.includes(UIStates.UnlockedDashboard)}
+{#if tags.nextTag === firstTag && !$appStateStore.uiState.includes(UIStates.UnlockedDashboard)}
 	<div class="hero">
 		<div class="hero-content text-justify">
 			<div class="max-w-md px-2">
@@ -69,8 +72,11 @@
 								<button
 									class="btn btn-sm btn-primary"
 									onclick={() => {
-										myAppState.value.uiState = [UIStates.UnlockedDashboard];
-										myAppState.value.sessionID = date.now();
+										myAppState.store.update((s) => {
+											s.uiState = [UIStates.UnlockedDashboard];
+											s.sessionID = Date.now().toString();
+											return s;
+										});
 									}}>Get Started</button
 								>
 							{:else if myAppState.location.state === LocationState.accepted || myAppState.location.state === LocationState.requested}
@@ -88,7 +94,7 @@
 			</div>
 		</div>
 	</div>
-{:else if myAppState.value.uiState.includes(UIStates.Finished)}
+{:else if $appStateStore.uiState.includes(UIStates.Finished)}
 	<Win {tags} appState={myAppState} />
 {:else}
 	<div class="m-2">

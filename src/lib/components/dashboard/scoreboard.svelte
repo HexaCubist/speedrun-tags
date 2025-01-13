@@ -6,18 +6,21 @@
 	import { timer, type TagList } from '$lib/tags.svelte';
 	import moment from 'moment';
 	import { getContext, onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let { appState, tags }: { appState: appStateType; tags: TagList } = $props();
 
+	let appStore = appState.store;
+
 	const prevWins = $derived(
-		Object.keys(appState.value.previousWins)
+		Object.keys($appStore.previousWins)
 			.map((winID) => {
-				const checkpoints = appState.value.previousWins[winID];
+				const checkpoints = $appStore.previousWins[winID];
 				const foundTags = Object.keys(checkpoints);
 				const first = foundTags[0];
 				const lastTag = foundTags[foundTags.length - 1];
 				const time = checkpoints[lastTag] - checkpoints[first];
-				const isCurrent = winID === appState.value.sessionID;
+				const isCurrent = winID === $appStore.sessionID;
 				return {
 					duration: time,
 					finishTime: checkpoints[lastTag],
@@ -69,7 +72,7 @@
 	</div>
 {/if}
 
-{#if Object.keys(appState.value.previousWins).length > 0}
+{#if Object.keys($appStore.previousWins).length > 0}
 	<div class="bg-base-100 rounded-box m-2 overflow-clip overflow-x-auto shadow">
 		<h2 class="m-4 mb-0 text-xl font-bold">Scoreboard</h2>
 		<table class="table">

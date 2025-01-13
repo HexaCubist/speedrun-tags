@@ -1,8 +1,10 @@
 import { browser } from '$app/environment';
+import { env } from '$env/dynamic/public';
 import type { appStateType } from './appState.svelte';
 import { distance } from '@turf/distance';
 import { point } from '@turf/helpers';
 import moment from 'moment';
+import { get } from 'svelte/store';
 
 export enum Status {
 	Draft = 'draft',
@@ -76,7 +78,10 @@ export class Tag {
 	) {
 		this.data = data;
 		const { id, status, sort, Name, Hint, hint_image, location } = data;
-		this.found = this.appState.value.tagState[this.data.id] || false;
+		this.found = get(this.appState.store).tagState[this.data.id] || false;
+		this.appState.store.subscribe((s) => {
+			this.found = s.tagState[this.data.id] || false;
+		});
 	}
 	get lat() {
 		return this.data.location.coordinates[1];
@@ -89,11 +94,17 @@ export class Tag {
 	}
 	public find() {
 		this.found = Date.now();
-		this.appState.value.tagState[this.data.id] = Date.now();
+		this.appState.store.update((s) => {
+			s.tagState[this.data.id] = Date.now();
+			return s;
+		});
 	}
 	public unfind() {
 		this.found = false;
-		this.appState.value.tagState[this.data.id] = false;
+		this.appState.store.update((s) => {
+			s.tagState[this.data.id] = false;
+			return s;
+		});
 	}
 }
 
@@ -118,3 +129,9 @@ export class TagList {
 		return new TagList(data.map((t) => new Tag(t, appState)));
 	}
 }
+
+export const getSRCSet = (id: string): Record<imagePresets, string> => {
+	return Object.fromEntries(
+		Object.values(imagePresets).map((p) => [p, `${env.PUBLIC_CDN_URL}/${id}?key=${p}`])
+	) as Record<imagePresets, string>;
+};

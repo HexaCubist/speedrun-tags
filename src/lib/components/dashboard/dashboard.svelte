@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import type { appStateType } from '$lib/appState.svelte';
-	import type { TagList } from '$lib/tags.svelte';
+	import { getSRCSet, type TagList } from '$lib/tags.svelte';
 	import Map from '../map/map.svelte';
 
 	let { tags, appState }: { tags: TagList; appState: appStateType } = $props();
@@ -52,7 +52,13 @@
 		<Map {tags} />
 	</div>
 
-	<div class="stats bg-primary text-base-100 flex flex-wrap shadow">
+	<div
+		class="stats bg-primary text-base-100 flex flex-wrap shadow"
+		style:--primary-transparent="color-mix(in oklab, var(--color-primary) 90%, transparent)"
+		style:background-image={nextTag?.data.hint_image
+			? `linear-gradient(to bottom, var(--primary-transparent), var(--primary-transparent)),url('${getSRCSet(nextTag.data.hint_image.id).medium}')`
+			: undefined}
+	>
 		{#if tags.nextTag}
 			<a class="stat shrink grow basis-full" href={tags.nextTag.link}>
 				<div class="stat-title text-base-100">Next Tag Hint (tap to open directions)</div>
@@ -61,6 +67,13 @@
 						{@html tags.nextTag.data.Hint}
 					{:else}
 						No hint... Good luck!
+					{/if}
+					{#if nextTag?.data.hint_image}
+						<img
+							class="rounded-box w-full max-w-screen-sm"
+							src={getSRCSet(nextTag.data.hint_image.id).medium}
+							alt={nextTag.data.hint_image.alt}
+						/>
 					{/if}
 				</div>
 			</a>

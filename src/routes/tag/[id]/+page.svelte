@@ -13,15 +13,19 @@
 
 	let timeTillRedirect = $state(3);
 
+	let hasSetFoundtag = false;
+
 	onMount(() => {
 		if (!foundTag?.found && isNextTag) {
+			hasSetFoundtag = true;
 			foundTag?.find();
 		}
 		const interval = setInterval(() => {
 			timeTillRedirect--;
 			if (timeTillRedirect <= 0) {
 				clearInterval(interval);
-				window.location.href = '/';
+				// window.location.href = '/';
+				window.close();
 			}
 		}, 1000);
 	});
@@ -30,11 +34,11 @@
 <div class="hero">
 	<div class="hero-content">
 		<div class="max-w-md px-2">
-			{#if foundTag && isNextTag}
+			{#if (foundTag && isNextTag) || (foundTag && hasSetFoundtag)}
 				<h1 class="text-center text-5xl font-bold">New Tag 🎉</h1>
 				<div>
 					<p class="mb-2">
-						You've found <i>{foundTag.data.Name}</i>! Congrats - redirecting in {timeTillRedirect} second{timeTillRedirect ===
+						You've found <i>{foundTag.data.Name}</i>! Congrats - closing in {timeTillRedirect} second{timeTillRedirect ===
 						1
 							? ''
 							: 's'}...
@@ -43,20 +47,28 @@
 			{:else if foundTag && foundTag.found}
 				<h1 class="text-center text-5xl font-bold">Tag already found!</h1>
 				<div>
-					<p class="mb-2">Please try again.</p>
+					<p class="mb-2">
+						Please try again. Closing in {timeTillRedirect} second{timeTillRedirect === 1
+							? ''
+							: 's'}...
+					</p>
 				</div>
 			{:else if foundTag}
 				<h1 class="text-center text-5xl font-bold">Wrong tag!</h1>
 				<div>
 					<p class="mb-2">
 						You're doing things a bit out of order: this tag is not the next one. Come back here in
-						a bit!
+						a bit! Closing in {timeTillRedirect} second{timeTillRedirect === 1 ? '' : 's'}...
 					</p>
 				</div>
 			{:else}
 				<h1 class="text-center text-5xl font-bold">Tag not found!</h1>
 				<div>
-					<p class="mb-2">Please try again.</p>
+					<p class="mb-2">
+						Please try again. Closing in {timeTillRedirect} second{timeTillRedirect === 1
+							? ''
+							: 's'}...
+					</p>
 				</div>
 			{/if}
 		</div>

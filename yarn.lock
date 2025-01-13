@@ -4440,6 +4440,11 @@ svelte-check@^4.0.0:
     picocolors "^1.0.0"
     sade "^1.7.4"
 
+svelte-persisted-store@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/svelte-persisted-store/-/svelte-persisted-store-0.12.0.tgz#cd9405cec4611df395f4342b382416237834d972"
+  integrity sha512-BdBQr2SGSJ+rDWH8/aEV5GthBJDapVP0GP3fuUCA7TjYG5ctcB+O9Mj9ZC0+Jo1oJMfZUd1y9H68NFRR5MyIJA==
+
 svelte-runes-store@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/svelte-runes-store/-/svelte-runes-store-0.0.6.tgz#d71f7185746a554082cbb25a4a29a1ca0237db9f"
