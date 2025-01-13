@@ -10,7 +10,7 @@
 	let tags = getContext<TagList>('tags');
 </script>
 
-<div class="bg-base-100 m-2 overflow-clip overflow-x-auto rounded-xl shadow">
+<div class="bg-base-100 rounded-box m-2 overflow-clip overflow-x-auto shadow">
 	<table class="table">
 		<!-- head -->
 		<thead>
@@ -18,10 +18,12 @@
 				<th></th>
 				<th>Name</th>
 				<th>Time Found</th>
+				<th>Time to Find</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each tags.foundTags as tag, i}
+				{@const lastTagFound = i === 0 ? undefined : tags.foundTags[i - 1]?.found}
 				{#if tag.found}
 					<tr>
 						<td>
@@ -41,8 +43,23 @@
 								{/key}
 							</a>
 						</td>
+						<td>
+							{#if !lastTagFound}
+								<p></p>
+							{:else}
+								<a href={tag.link}>
+									{#key timer.time}
+										{moment(tag.found - lastTagFound).format('mm:ss')}
+									{/key}
+								</a>
+							{/if}
+						</td>
 					</tr>
 				{/if}
+			{:else}
+				<tr>
+					<td colspan="4" class="text-center italic py-5">No tags found yet...</td>
+				</tr>
 			{/each}
 		</tbody>
 	</table>
