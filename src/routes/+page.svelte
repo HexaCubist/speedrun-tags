@@ -91,5 +91,7 @@
 {:else if myAppState.value.uiState.includes(UIStates.Finished)}
 	<Win {tags} appState={myAppState} />
 {:else}
-	<Dashboard {tags} appState={myAppState} />
+	<div class="m-2">
+		<Dashboard {tags} appState={myAppState} />
+	</div>
 {/if}
