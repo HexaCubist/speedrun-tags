@@ -26,9 +26,9 @@
 		interval = setInterval(() => {
 			timeTillRedirect--;
 			if (timeTillRedirect <= 0) {
-				clearInterval(interval);
-				// window.location.href = '/';
 				window.close();
+				goto('/');
+				clearTimeout(interval);
 			}
 		}, 1000);
 	});
